@@ -1,0 +1,17 @@
+#Destination /etc/systemd/system/celery.service
+[Unit]
+Description=Celery daemon
+After=network.target
+
+[Service]
+CPUWeight=10 #default 100
+CPUQuota=30% #absolute limit on how much CPU time is granted even if nothing else is going on
+Type=simple
+User=your-OS-user
+Group=www-data
+WorkingDirectory=your-working-dir
+ExecStart=/home/user/your-working-dir/venv/bin/celery -A config worker -l CRITICAL
+
+
+[Install]
+WantedBy=multi-user.target
