@@ -1,0 +1,15 @@
+#Destination /etc/systemd/system/gunicorn.service
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+PIDFile=/home/ubuntu/run/gunicorn/pid
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/project
+ExecStart=/home/ubuntu/project/venv/bin/gunicorn -c "/home/ubuntu/obdev2018/deploys/gunicorn-config.py" config.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
