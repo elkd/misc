@@ -38,7 +38,7 @@ RSA_KEY=$(cat ~/.ssh/id_rsa.pub)
 curl -H "Authorization: token $1" --data '{"title":"EC2-instance-$2-ID-$RANDOM","key":"'"$RSA_KEY"'"}' https://api.github.com/user/keys
 
 
-git clone git@github.com:elkd/$2.git
+git clone --depth=1 git@github.com:elkd/$2.git
 
 #Create them here so that they are out of git VCS
 mkdir ./logs ./run
@@ -56,7 +56,7 @@ source venv/bin/activate
 
 #It is not a guarantee that this process will pass smoothly
 #Always when there is a failure update the req files and rerun the command.
-pip install --upgrade pip wheel setuptools gevent gunicorn
+pip install --upgrade pip wheel setuptools gunicorn[gevent]
 pip install -r requirements.txt
 
 sudo cp ~/misc/gunicorn.socket /etc/systemd/system
