@@ -9,7 +9,9 @@ PIDFile=/home/ubuntu/run/gunicorn/pid
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/project
-ExecStart=/home/ubuntu/project/venv/bin/gunicorn -c "/home/ubuntu/obdev2018/deploys/gunicorn-config.py" config.wsgi:application
+
+#Replace wsgi:application with exact path with wsgi.py file eg config.wsgi:application
+ExecStart=/home/ubuntu/project/venv/bin/gunicorn -c "/home/ubuntu/misc/gunicorn-config.py" wsgi:application
 
 [Install]
 WantedBy=multi-user.target

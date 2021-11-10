@@ -12,6 +12,9 @@
 
 # CALL IT LIKE THIS: bash deploy.sh github-token repo-name domain-name-without-TLD
 
+#Assume it is started on the misc file
+cd ~/
+
 sudo apt-get -y update
 
 echo 'alias python="python3"' >> ~/.bashrc
@@ -34,6 +37,7 @@ RSA_KEY=$(cat ~/.ssh/id_rsa.pub)
 #Sometimes pasting these lines to other editors destroy the spacing encoding and the bash will fail to parse spaces
 curl -H "Authorization: token $1" --data '{"title":"EC2-instance-$2-ID-$RANDOM","key":"'"$RSA_KEY"'"}' https://api.github.com/user/keys
 
+
 git clone git@github.com:elkd/$2.git
 
 #Create them here so that they are out of git VCS
@@ -41,7 +45,7 @@ mkdir ./logs ./run
 chmod 764 -R ./logs ./run ~/.pip
 
 touch ./logs/gunicorn-access.log ./logs/gunicorn-error.log ./logs/nginx-access.log ./logs/nginx-error.log ./logs/celery-access.log ./logs/celery-error.log
-mkdir ./run/gunicorn ./run/celery ./run/gulp
+mkdir ./run/gunicorn ./run/celery
 
 cd $2
 
@@ -50,9 +54,8 @@ source venv/bin/activate
 
 #It is not a guarantee that this process will pass smoothly
 #Always when there is a failure update the req files and rerun the command.
-pip install --upgrade pip wheel setuptools
+pip install --upgrade pip wheel setuptools gevent gunicorn
 pip install -r requirements.txt
-
 
 sudo cp ./gunicorn.socket /etc/systemd/system
 sudo cp ./gunicorn.service /etc/systemd/system
@@ -113,7 +116,6 @@ echo "DONE SUCCESSFULLY!"
 #sudo systemctl restart gunicorn.service
 #-------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------
-
 
 
 
