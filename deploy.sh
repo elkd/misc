@@ -42,6 +42,8 @@ git clone git@github.com:elkd/$2.git
 
 #Create them here so that they are out of git VCS
 mkdir ./logs ./run
+cp ~/misc/pip.conf ~/.pip/pip.conf
+
 chmod 764 -R ./logs ./run ~/.pip
 
 touch ./logs/gunicorn-access.log ./logs/gunicorn-error.log ./logs/nginx-access.log ./logs/nginx-error.log ./logs/celery-access.log ./logs/celery-error.log
@@ -57,12 +59,12 @@ source venv/bin/activate
 pip install --upgrade pip wheel setuptools gevent gunicorn
 pip install -r requirements.txt
 
-sudo cp ./gunicorn.socket /etc/systemd/system
-sudo cp ./gunicorn.service /etc/systemd/system
+sudo cp ~/misc/gunicorn.socket /etc/systemd/system
+sudo cp ~/misc/gunicorn.service /etc/systemd/system
 
 sudo systemctl start gunicorn.socket
 sudo systemctl enable gunicorn.socket
-sudo cp ./nginx.conf /etc/nginx/sites-available/$3 
+sudo cp ~/misc/nginx.conf /etc/nginx/sites-available/$3 
 
 #MUST open this file and update the server_name with IP addresses
 sudo ln -s /etc/nginx/sites-available/$3 /etc/nginx/sites-enabled
