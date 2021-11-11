@@ -8,10 +8,12 @@ After=network.target
 PIDFile=/home/ubuntu/run/gunicorn/pid
 User=ubuntu
 Group=www-data
+
+#Replace with the name of the project
 WorkingDirectory=/home/ubuntu/project
 
 #Replace wsgi:application with exact path with wsgi.py file eg config.wsgi:application
-ExecStart=/home/ubuntu/project/venv/bin/gunicorn -c "/home/ubuntu/misc/gunicorn-config.py" wsgi:application
+ExecStart=/home/ubuntu/project/.venv/bin/gunicorn -c "/home/ubuntu/misc/gunicorn-config.py" wsgi:application
 
 [Install]
 WantedBy=multi-user.target

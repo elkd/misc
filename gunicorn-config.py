@@ -8,8 +8,8 @@
 timeout = 30
 
 #Depending on the number of cpu, also remember uvicorn is running so requests are split
-#This number is for 1 vCPU instance. I have to deploy same instances for easy managing.
-workers = 3
+#This number is for 2 vCPU instance. I have to deploy same instances for easy managing.
+workers = 6
 
 pidfile = '/home/ubuntu/run/gunicorn/pid'
 

@@ -35,29 +35,29 @@ RSA_KEY=$(cat ~/.ssh/id_rsa.pub)
 #More https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
 
 #Sometimes pasting these lines to other editors destroy the spacing encoding and the bash will fail to parse spaces
-curl -H "Authorization: token $1" --data '{"title":"EC2-instance-$2-ID-$RANDOM","key":"'"$RSA_KEY"'"}' https://api.github.com/user/keys
-
+curl -H "Authorization: token $1" --data '{"title":"EC2-instance-'"$2"'-ID'"$RANDOM"'","key":"'"$RSA_KEY"'"}' https://api.github.com/user/keys
 
 git clone --depth 1 git@github.com:elkd/$2.git
 
 #Create them here so that they are out of git VCS
-mkdir ./logs ./run
+mkdir ./logs ./run ./.pip
 cp ~/misc/pip.conf ~/.pip/pip.conf
 
-chmod 764 -R ./logs ./run ~/.pip
+chmod 764 -R ./logs ./run ./.pip
 
 touch ./logs/gunicorn-access.log ./logs/gunicorn-error.log ./logs/nginx-access.log ./logs/nginx-error.log ./logs/celery-access.log ./logs/celery-error.log
 mkdir ./run/gunicorn ./run/celery
 
 cd $2
 
-python -m venv .venv
-source venv/bin/activate
+mkdir staticfiles
+
+python3 -m venv .venv && source .venv/bin/activate
 
 #It is not a guarantee that this process will pass smoothly
 #Always when there is a failure update the req files and rerun the command.
-pip install --upgrade pip wheel setuptools gunicorn[gevent]
-pip install -r requirements.txt
+pip install --upgrade pip wheel setuptools gunicorn[gevent] psycogreen requests django-db-geventpool
+pip install -r requirements.txt --retries 20 --timeout 300
 
 sudo cp ~/misc/gunicorn.socket /etc/systemd/system
 sudo cp ~/misc/gunicorn.service /etc/systemd/system
@@ -90,15 +90,15 @@ sudo ufw allow 22
 #THE SERVERS SHARE DB AND S3 STORAGE THIS SHOULDN'T BE RUN ON EVERY SERVER
 #python manage.py migrate
 
-#static files on the local(static) to be served by Nginx for PWA features.
 #python manage.py collectstatic --noinput
 
 echo "DONE INSTALLING!"
 
 #These steps aren't used when you don't need HTTPS certificate
-sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get update
-sudo apt-get install python-certbot-nginx -y
+sudo apt-get install python3-certbot-nginx -y
+sudo certbot --noninteractive --agree-tos -d $3.com -d www.$3.com --register-unsafely-without-email --nginx
+
 
 #If you want to change the IP of the server to a static one for quick provision
 #then you have to logout the ssh mode before performing the next step.
