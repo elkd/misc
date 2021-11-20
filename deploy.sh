@@ -23,6 +23,7 @@ source ~/.bashrc
 sudo apt install python3-venv gcc python3-pip python3-dev libpq-dev python3-wheel gettext nginx curl postgresql postgresql-contrib -y
 
 
+sudo update-alternatives --set editor /usr/bin/vim.basic
 #Beware of the space btn file name and -q to mean quiet
 #Make sure the key is created as id_rsa the default name
 ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N "" -C "$1"
