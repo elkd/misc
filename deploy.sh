@@ -10,7 +10,7 @@
 
 #ALSO NGINX GUNICORN FILES NEEDS SOME UPDATES BEFORE CALLING THIS SCRIPT  
 
-# CALL IT LIKE THIS: bash deploy.sh github-token repo-name domain-name-without-TLD
+# CALL IT LIKE THIS: bash deploy.sh github-token user-or-org-name repo-name domain-name-without-TLD TLD
 
 #Assume it is started on the misc file
 cd ~/
@@ -36,9 +36,9 @@ RSA_KEY=$(cat ~/.ssh/id_rsa.pub)
 #More https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
 
 #Sometimes pasting these lines to other editors destroy the spacing encoding and the bash will fail to parse spaces
-curl -H "Authorization: token $1" --data '{"title":"EC2-instance-'"$2"'-ID'"$RANDOM"'","key":"'"$RSA_KEY"'"}' https://api.github.com/user/keys
+curl -H "Authorization: token $1" --data '{"title":"EC2-instance-'"$3"'-ID'"$RANDOM"'","key":"'"$RSA_KEY"'"}' https://api.github.com/user/keys
 
-git clone --depth 1 git@github.com:elkd/$2.git
+git clone --depth 1 git@github.com:$2/$3.git
 
 #Create them here so that they are out of git VCS
 mkdir ./logs ./run ./.pip
@@ -49,7 +49,7 @@ chmod 764 -R ./logs ./run ./.pip
 touch ./logs/gunicorn-access.log ./logs/gunicorn-error.log ./logs/nginx-access.log ./logs/nginx-error.log ./logs/celery-access.log ./logs/celery-error.log
 mkdir ./run/gunicorn ./run/celery
 
-cd $2
+cd $3
 
 mkdir staticfiles
 
@@ -65,40 +65,32 @@ sudo cp ~/misc/gunicorn.service /etc/systemd/system
 
 sudo systemctl start gunicorn.socket
 sudo systemctl enable gunicorn.socket
-sudo cp ~/misc/nginx.conf /etc/nginx/sites-available/$3 
+sudo cp ~/misc/nginx.conf /etc/nginx/sites-available/$4
 
 #MUST open this file and update the server_name with IP addresses
-sudo ln -s /etc/nginx/sites-available/$3 /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/$4 /etc/nginx/sites-enabled
 sudo nginx -t && sudo systemctl restart nginx
 
 sudo ufw allow 'Nginx Full'
 sudo ufw allow 22
 #sudo ufw enable -y
 
-# Gulp should be run locally to help update the static files for Nginx root
-# These files are called by service worker from / of domain.com
-#cd ./frontend
-#sudo npm install cnpm -g
-#cnpm install
-#sudo cnpm install gulp workbox-cli -g
-#sudo systemctl start gulp.service
-#gulp build
 
-
-#This step onwards needs the env variables loaded
+# ================================= SECRETS =================================
+# This step onwards needs the env variables loaded
 #vim .env #Add all the settings parameters.
 
 #THE SERVERS SHARE DB AND S3 STORAGE THIS SHOULDN'T BE RUN ON EVERY SERVER
 #python manage.py migrate
 
 #python manage.py collectstatic --noinput
-
+# ================================= SECRETS =================================
 echo "DONE INSTALLING!"
 
 #These steps aren't used when you don't need HTTPS certificate
 sudo apt-get update
 sudo apt-get install python3-certbot-nginx -y
-sudo certbot --noninteractive --agree-tos -d $3.com -d www.$3.com --register-unsafely-without-email --nginx
+sudo certbot --noninteractive --agree-tos -d $4.$5 -d www.$4.$5 --register-unsafely-without-email --nginx
 
 
 #If you want to change the IP of the server to a static one for quick provision
@@ -125,6 +117,7 @@ echo "DONE SUCCESSFULLY!"
 #To copy data from one db instance to another.
 #pg_dump -C -h localhost -U user -P db_name | psql -h remote-psql-host -U password local_db
 
+#If you want to create a separate Linux User
 #sudo useradd -m -p "$(python -c "import crypt; print crypt.crypt(\"REPLACE-WITH-RAW-PS\", \"\$6\$$(</dev/urandom tr -dc 'a-zA-Z0-9' | head -c 32)\$\")")" -s /bin/bash user
 #sudo gpasswd -a user sudo
 #sudo su - postres-user

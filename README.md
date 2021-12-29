@@ -52,6 +52,10 @@ For Django users, django-db-geventpool package is also installed to aid the DB c
 
 If you don't want to use monkey patch with Psycogreen you can edit gunicorn-config.py last function. Eg in a flask app, you can monkey patch using patch_all gevent function.
 
+pip.conf file contains examples of Pypi (pip) url mirrors that you can use to speed up the pip installation.
+The default source url of python pip is:https://files.pythonhosted.org/. This site may be very slow and may cause you to fail to install python packages.
+You can find the one closer to your server's location, there are plenty of them
+
 ```python
 
 from gevent import monkey; monkey.patch_all()
