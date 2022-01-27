@@ -20,10 +20,10 @@ git clone https://github.com/elkd/misc.git
 ```bash
 #For a new site
 #Installing dependencies, pulling your repo & setup Gunicorn and Nginx
-bash deploy.sh Github-personal-access-token GitHub-account-name Github-repo-name domain-name-without-TLD TLD
+bash deploy.sh Github-personal-access-token GitHub-account-name Github-repo-name domain-name-without-TLD TLD db
 
 #For example
-bash deploy.sh chatupa12308bx876136xxxlength40hexstring elkd cool-ecommerce-shop shopingsite com
+bash deploy.sh chatupa12308bx876136xxxlength40hexstring elkd cool-ecommerce-shop shopingsite com sqlite3
 
 #The Github account and repo name should be of the Python project you are deploying.
 #It can be hosted on a private or public repo, both are okay.
@@ -44,9 +44,9 @@ To learn how to obtain a Github Personal access token for your account please vi
 
 To learn more about SSH keys [read this github article](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 
-The deploy.sh script installs the Postgres Database, Nginx and Python3 build tools to the server. You can edit line 23 to only install the software you want.
+The deploy.sh script installs your database of choice, Nginx and Python3 build tools to the server. You can edit line 23 to only install the software you want.
 
-The Gunicorn configuration files use Gevent. For that to work well with Postgres DB. In this case, psycogreen is called on all gunicorn processes to monkey patch psycopg (Python Postgres driver that I assume most Postgres users prefer). See the last lines of gunicorn-config.py file to see how this is implemented.
+The Gunicorn configuration files use Gevent. For that to work well with mostly Postgres DB. In this case, psycogreen is called on all gunicorn processes to monkey patch psycopg (Python Postgres driver that I assume most Postgres users prefer). See the last lines of gunicorn-config.py file to see how this is implemented.
 
 For Django users, django-db-geventpool package is also installed to aid the DB connection pool using gevent. If you are using a framework other than Django you can install a similar DB pool package if you need it eg for Database connections reuse.
 
