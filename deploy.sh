@@ -10,7 +10,7 @@
 
 #ALSO NGINX GUNICORN FILES NEEDS SOME UPDATES BEFORE CALLING THIS SCRIPT  
 
-# CALL IT LIKE THIS: bash deploy.sh github-token user-or-org-name repo-name domain-name-without-TLD TLD
+# CALL IT LIKE THIS: bash deploy.sh github-token user-or-org-name repo-name domain-name-without-TLD TLD db
 
 #Assume it is started on the misc file
 cd ~/
@@ -20,8 +20,26 @@ sudo apt-get -y update
 echo 'alias python="python3"' >> ~/.bashrc
 source ~/.bashrc
 
-sudo apt install python3-venv gcc python3-pip python3-dev libpq-dev python3-wheel gettext nginx curl postgresql postgresql-contrib -y
+if [ -z "$6" ]
+  then
+    sudo apt install python3-venv gcc python3-pip python3-dev libpq-dev python3-wheel gettext nginx curl wget -y
+fi
 
+if [ "$6" == "postgres" ]
+  then
+    sudo apt install python3-venv gcc python3-pip python3-dev libpq-dev python3-wheel gettext nginx curl wget postgresql postgresql-contrib -y
+fi
+
+if [ "$6" == "sqlite3" ]
+  then
+    sudo apt install python3-venv gcc python3-pip python3-dev libpq-dev python3-wheel gettext nginx curl wget sqlite3 -y
+fi
+
+
+if [ "$6" == "mysql" ]
+  then
+    sudo apt install python3-venv gcc python3-pip python3-dev libpq-dev python3-wheel gettext nginx curl wget mysql-server -y
+fi
 
 sudo update-alternatives --set editor /usr/bin/vim.basic
 #Beware of the space btn file name and -q to mean quiet
