@@ -110,6 +110,10 @@ sudo apt-get update
 sudo apt-get install python3-certbot-nginx -y
 sudo certbot --noninteractive --agree-tos -d $4.$5 -d www.$4.$5 --register-unsafely-without-email --nginx
 
+#RENEWING CERTS SHOULD BE AUTOMATICALLY, INCASE OF ISSUES RUN THESE;
+#sudo systemctl status certbot.timer
+#sudo certbot renew --dry-run
+# TO MANUALLY RENEW: sudo certbot renew
 
 #If you want to change the IP of the server to a static one for quick provision
 #then you have to logout the ssh mode before performing the next step.
