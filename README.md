@@ -1,6 +1,6 @@
 # Misc
 
-Misc contains the simplest scripts to deploy Simple Python Web Servers on Linux servers. This is best for projects that tools like Docker, Terraform, Chef, Ansible look overkill.
+Misc contains the simplest scripts to deploy Simple Python Web apps on fresh Linux servers (Ubuntu 16, 18, 20). This is best for projects that tools like Containers, Terraform, Ansible and friends look overkill.
 
 Note that these simple scripts don't manage any secret files. The scripts assume the secret files are stored somewhere unknown and they should be added to the server by other automation tools or manually. 
 
