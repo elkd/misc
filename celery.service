@@ -4,15 +4,23 @@ Description=Celery daemon
 After=network.target
 
 [Service]
-CPUWeight=10 #default 100
-CPUQuota=30% #absolute limit on how much CPU time is granted even if nothing else is going on
+#default 100
+CPUWeight=10
+
+#absolute limit on how much CPU time is granted even if nothing else is going on
+CPUQuota=30%
 Type=simple
-User=your-OS-user
+
+#Change the user to your OS user eg to ubuntu on Ubuntu AWS EC2
+User=your-user
 Group=www-data
 
-#PLEASE CHANGE THE WORKING DIRECTORY, PATH, AND -A FLAG (app name to be name of your Django folder with celery.py
-WorkingDirectory=your-working-dir
-ExecStart=/home/your-user/your-working-dir/.venv/bin/celery -A your-app-name worker -l INFO #CRITICAL
+#PLEASE CHANGE THE WORKING DIRECTORY
+WorkingDirectory=/home/your-user/your-working-dir
+
+#CHANGE PATH, AND -A FLAG (app name to be name you defined inside celery.py
+#-l loglevel should be CRITICAL for less logging in production
+ExecStart=/home/your-user/your-working-dir/.venv/bin/celery -A your-app-name worker -l INFO
 
 
 [Install]
