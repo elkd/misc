@@ -9,8 +9,10 @@ CPUQuota=30% #absolute limit on how much CPU time is granted even if nothing els
 Type=simple
 User=your-OS-user
 Group=www-data
+
+#PLEASE CHANGE THE WORKING DIRECTORY, PATH, AND -A FLAG (app name to be name of your Django folder with celery.py
 WorkingDirectory=your-working-dir
-ExecStart=/home/user/your-working-dir/venv/bin/celery -A config worker -l CRITICAL
+ExecStart=/home/your-user/your-working-dir/.venv/bin/celery -A your-app-name worker -l INFO #CRITICAL
 
 
 [Install]

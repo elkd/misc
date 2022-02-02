@@ -20,10 +20,10 @@ git clone https://github.com/elkd/misc.git
 ```bash
 #For a new site
 #Installing dependencies, pulling your repo & setup Gunicorn and Nginx
-bash deploy.sh Github-personal-access-token GitHub-account-name Github-repo-name domain-name-without-TLD TLD db
+bash deploy.sh Github-access-token Account-name Repo-name domain-name-without-TLD TLD db
 
 #For example
-bash deploy.sh chatupa12308bx876136xxxlength40hexstring elkd cool-ecommerce-shop shopingsite com sqlite3
+bash deploy.sh chatp12308bx876136 elkd coolapp shopingsite com sqlite3
 
 #The Github account and repo name should be of the Python project you are deploying.
 #It can be hosted on a private or public repo, both are okay.
