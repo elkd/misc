@@ -60,7 +60,13 @@ git clone --depth 1 git@github.com:$2/$3.git
 
 #Create them here so that they are out of git VCS
 mkdir ./logs ./run ./.pip
-cp ~/misc/pip.conf ~/.pip/pip.conf
+
+
+if [ ! -z "$7" ]
+  then
+    cp ~/misc/pip.conf ~/.pip/pip.conf
+fi
+
 
 chmod 764 -R ./logs ./run ./.pip
 
