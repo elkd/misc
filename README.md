@@ -46,15 +46,16 @@ To learn more about SSH keys [read this github article](https://docs.github.com/
 
 The deploy.sh script installs your database of choice, Nginx and Python3 build tools to the server. You can edit line 23 to only install the software you want.
 
+The gunicorn.service and nginx.conf files must be edited before running deploy.sh
+In the gunicorn.service file, edit the working directory path for your project and the location for the wsgi.py file in your Python app
+By default the script will start gunicorn socket and service both monitored by systemd.
+For nginx.conf, specify the domain name for the default listening server, your working directory (and optional, location for static files if they are to be served by Nginx)
+
 The Gunicorn configuration files use Gevent. For that to work well with mostly Postgres DB. In this case, psycogreen is called on all gunicorn processes to monkey patch psycopg (Python Postgres driver that I assume most Postgres users prefer). See the last lines of gunicorn-config.py file to see how this is implemented.
 
 For Django users, django-db-geventpool package is also installed to aid the DB connection pool using gevent. If you are using a framework other than Django you can install a similar DB pool package if you need it eg for Database connections reuse.
 
-If you don't want to use monkey patch with Psycogreen you can edit gunicorn-config.py last function. Eg in a flask app, you can monkey patch using patch_all gevent function.
-
-pip.conf file contains examples of Pypi (pip) url mirrors that you can use to speed up the pip installation.
-The default source url of python pip is:https://files.pythonhosted.org/. This site may be very slow and may cause you to fail to install python packages.
-You can find the one closer to your server's location, there are plenty of them
+If you don't want to use monkey patch with Psycogreen you can edit gunicorn-config.py's last function. Eg in a flask app, you can monkey patch using patch_all gevent function.
 
 ```python
 
@@ -66,11 +67,15 @@ from gevent import monkey; monkey.patch_all()
 
 ```
  
+ 
+The pip.conf file and celery.service are optional. Pip.conf contains examples of Pypi (pip) url mirrors that you can use to speed up the pip installation.
+The default source url of python pip is:https://files.pythonhosted.org/. This site may be very slow and may cause you to fail to install python packages.
+You can find the one closer to your server's location, there are plenty of them
+
 
 ## Contributing
 Pull requests are warmly welcomed. 
 For major changes, please open an issue first to discuss what you would like to change.
-
 
 
 ## License
