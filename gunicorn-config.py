@@ -7,9 +7,9 @@
 #This is default. Strict but the best, let users retry on dead request connections
 timeout = 30
 
-#Depending on the number of cpu, also remember uvicorn is running so requests are split
-#This number is for 2 vCPU instance. I have to deploy same instances for easy managing.
-workers = 6
+#Depending on the number of cpu
+#Eg for 2 vCPU instance 6 workes are okay. 3 for 1 vCPU is fair
+workers = 3
 
 pidfile = '/home/ubuntu/run/gunicorn/pid'
 
@@ -25,12 +25,13 @@ bind = 'unix:/run/gunicorn.sock'
 
 #This worker class needs patching for some libraries
 #Can't use gevent with celery or other libraries in this same configuration
-worker_class = 'gevent'
-worker_connections = 1000
+#worker_class = 'gevent'
+#worker_connections = 1000
 
 #This is to patch psycogreen so it can be run with gevent
-from psycogreen.gevent import patch_psycopg
+#Applicabe when using Postgres
+#from psycogreen.gevent import patch_psycopg
 
-def post_fork(server, worker):
-    patch_psycopg()
-    worker.log.info("Made Psycopg2 Green")
+#def post_fork(server, worker):
+#    patch_psycopg()
+#    worker.log.info("Made Psycopg2 Green")
