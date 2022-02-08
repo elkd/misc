@@ -20,7 +20,7 @@ git clone https://github.com/elkd/misc.git
 ```bash
 #For a new site
 #Installing dependencies, pulling your repo & setup Gunicorn and Nginx
-bash deploy.sh Github-access-token Account-name Repo-name domain-name-without-TLD TLD db
+bash deploy.sh Github-access-token Account-name Repo-name domain-name-without-TLD TLD [db (optional)]
 
 #For example
 bash deploy.sh chatp12308bx876136 elkd coolapp shopingsite com sqlite3
