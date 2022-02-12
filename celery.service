@@ -20,7 +20,8 @@ WorkingDirectory=/home/your-user/your-working-dir
 
 #CHANGE PATH, AND -A FLAG (app name to be name you defined inside celery.py
 #-l loglevel should be CRITICAL for less logging in production
-ExecStart=/home/your-user/your-working-dir/.venv/bin/celery -A your-app-name worker -l INFO
+#-P process mode can be threads when using multiprocess on the celery task, other option can be using gevent
+ExecStart=/home/your-user/your-working-dir/.venv/bin/celery -A your-app-name worker -l INFO -P threads
 
 
 [Install]
