@@ -96,6 +96,7 @@ sudo cp ~/misc/nginx.conf /etc/nginx/sites-available/$4
 
 #MUST open this file and update the server_name with IP addresses
 sudo ln -s /etc/nginx/sites-available/$4 /etc/nginx/sites-enabled
+sudo rm /etc/nginx/sites-enabled/default
 sudo nginx -t && sudo systemctl restart nginx
 
 sudo ufw allow 'Nginx Full'
@@ -117,7 +118,7 @@ echo "DONE INSTALLING!"
 #These steps aren't used when you don't need HTTPS certificate
 sudo apt-get update
 sudo apt-get install python3-certbot-nginx -y
-sudo certbot --noninteractive --agree-tos -d $4.$5 -d www.$4.$5 --register-unsafely-without-email --nginx
+sudo certbot --noninteractive --agree-tos -d $4.$5 -d www.$4.$5 --register-unsafely-without-email --nginx --redirect
 
 #RENEWING CERTS SHOULD BE AUTOMATICALLY, INCASE OF ISSUES RUN THESE;
 #sudo systemctl status certbot.timer
